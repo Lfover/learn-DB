@@ -2,12 +2,12 @@
 
 void main()
 {
-	CycleSeqQueue Q;
-	CycleSeqQueueInit(&Q,8);
-	CycleSeqQueueEn(&Q, 1);
-	CycleSeqQueueEn(&Q, 2);
-	CycleSeqQueueEn(&Q, 3);
-	CycleSeqQueueEn(&Q, 4);
+	//CycleSeqQueue Q;
+	//CycleSeqQueueInit(&Q,8);
+	//CycleSeqQueueEn(&Q, 1);
+	//CycleSeqQueueEn(&Q, 2);
+	//CycleSeqQueueEn(&Q, 3);
+	//CycleSeqQueueEn(&Q, 4);
 
 }
 

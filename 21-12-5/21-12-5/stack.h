@@ -32,6 +32,17 @@ bool Empty(SeqStack *pst){
 	assert(pst != NULL);
 	return pst->top == 0;
 }
+bool Inc(SeqStack *pst, size_t new_capacity)
+{
+	assert(pst != NULL&&new_capacity > pst->capacity);
+	ElemType *new_base = (ElemType*)realloc(pst->base, sizeof(ElemType)*new_capacity);
+	if (new_base == 0){
+		return false;
+	}
+	pst->base = new_base;
+	pst->capacity = new_capacity;
+	return true;
+}
 void SeqStackInit(SeqStack *pst,int sz)
 {
 	assert(pst != NULL);
@@ -43,7 +54,7 @@ void SeqStackInit(SeqStack *pst,int sz)
 void SeqStackPush(SeqStack *pst, ElemType x)
 {
 	assert(pst != NULL);
-	if (Full(pst)){
+	if (Full(pst) &&(!Inc(pst,pst->capacity*2))){
 		printf("栈已满，不能插入\n");
 		return;
 	}
@@ -107,7 +118,7 @@ int SeqStackSize(SeqStack *pst)
 }
 
 
-
+//链栈
 typedef struct LinkStackNode{
 	ElemType data;
 	struct LinkStackNode *link;
