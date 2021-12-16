@@ -4,40 +4,138 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 #include <memory.h>
 #pragma warning(disable:4996)
-//#include <vld>
+#define ElemType char
+///////////////////////////////////////////////////////////////////
+//链栈
+typedef struct LinkStackNode{
+	ElemType data;
+	struct LinkStackNode *link;
+}LinkStackNode;
+typedef LinkStackNode *LinkStack;
+void LinkStackInit(LinkStack *pst);
+void LinkStackPush(LinkStack *pst, ElemType x);
+void LinkStackPop(LinkStack *pst);
+ElemType LinkStackTop(LinkStack *pst);
+void LinkStackShow(LinkStack *pst);
+int LinkStackSize(LinkStack *pst);
+void LinkStackDestroy(LinkStack *pst);
+bool LinkStackEmpty(LinkStack *pst);
+//////////////////////////////////////////////////////////////////////////////////
+//初始化
+void LinkStackInit(LinkStack *pst)
+{
+	assert(pst != NULL);
+	*pst = NULL;
+}
+//入栈
+void LinkStackPush(LinkStack *pst, ElemType x)
+{
+	assert(pst != NULL);
+	LinkStackNode *node = (LinkStackNode*)malloc(sizeof(LinkStackNode));
+	assert(node != NULL);
+	node->data = x;
+	node->link = *pst;
+	*pst = node;
+}
+//出栈
+void LinkStackPop(LinkStack *pst)
+{
+	assert(pst != NULL);
+	if (*pst != NULL){
+		LinkStackNode *p = *pst;
+		*pst = p->link;
+		free(p);
+	}
+}
+//链栈栈顶元素
+ElemType LinkStackTop(LinkStack *pst)
+{
+	assert(pst != NULL&&*pst != NULL);
+	return (*pst)->data;
+}
+//链栈显示
+void LinkStackShow(LinkStack *pst)
+{
+	assert(pst != NULL);
+	LinkStackNode *p = *pst;
+	while (p != NULL){
+		printf("| %d |\n", p->data);
+		p = p->link;
+	}
+}
+//链栈的大小
+int LinkStackSize(LinkStack *pst)
+{
+	assert(pst != NULL);
+	int size = 0;
+	LinkStackNode *p = *pst;
+	while (p != NULL){
+		size++;
+		p = p->link;
+	}
+	return size;
+}
+void LinkStackDestroy(LinkStack *pst)
+{
+	assert(pst != NULL);
+	LinkStackNode *p = *pst;
+	while (p != NULL){
+		*pst = p->link;
+		free(p);
+		p = *pst;
+	}
+}
+bool LinkStackEmpty(LinkStack *pst)
+{
+	assert(pst);
+	return *pst == NULL;
+}
 
-#define ElemType int
+//////////////////////////////////////////////////////////////////
+
 #define BTElemType char
 typedef struct Queue{
 	char data;
 	struct Queue *next;
 }Queue;
+////////////////////////////////////////////////////////////////////////
+
 typedef struct BinTreeNode
 {
 	BTElemType data;
 	struct BinTreeNode *leftChild;
 	struct BinTreeNode *rightChild;
 }BinTreeNode;
-
 typedef BinTreeNode *BinTree;
-
+//二叉树创建
 void BinTreeInit(BinTree *t);
 void BinTreeCreate(BinTree *t);//因为可能要改变二叉树的根节点，所以传递地址
 BinTree BinTreeCreate_1();
 BinTree BinTreeCreate_2(const char *s,int *i);
-int Size(BinTree t);
+BinTree BinTreeCreate_3(const char *vlr, const char *lvr,int n);
+//二叉树的遍历
 void BinTreeVLR(BinTree t);
 void BinTreeLVR(BinTree t); 
 void BinTreeLRV(BinTree t);
 void BinTreelevel(BinTree t);
+
+//二叉树的非递归遍历
+void BinTreeVLR_Nor(BinTree t);
+void BinTreeLVR_Nor(BinTree t);
+void BinTreeLRV_Nor(BinTree t);
+void BinTreelevel_Nor(BinTree t);
+
+//二叉树的算法
+int Size(BinTree t);
 int Height(BinTree t);
 BinTreeNode *Left(BinTreeNode *p);
 BinTreeNode *Right(BinTreeNode *p);
 BinTreeNode *BinTreeFind(BinTree t, BTElemType key);
 BinTreeNode *BinTreeParent(BinTree t, BinTreeNode *p);
-BinTreeNode *BinTreeCopy(BinTree t);
+BinTreeNode *BinTreeClone(BinTree t);
 bool Equal(BinTree t1, BinTree t2);
 //////////////////////////////////////////////////////////////
 //初始化
@@ -97,6 +195,23 @@ BinTree BinTreeCreate_2(const char *s, int *i)
 		(*i)++;
 		t->rightChild = BinTreeCreate_2(s, i);
 		return t;
+	}
+}
+BinTree BinTreeCreate_3(const char *vlr, const char *lvr, int n)
+{
+	if (n == 0){
+		return NULL;
+	}
+	int k = 0;
+	while (vlr[0] != lvr[k]){
+		k++;
+	}
+	BinTreeNode *t = (BinTreeNode*)malloc(sizeof(BinTreeNode));
+	t->data = lvr[k];
+	t->leftChild = BinTreeCreate_3(vlr + 1, lvr, k);
+	t->rightChild = BinTreeCreate_3(vlr + k + 1, lvr + k + 1, n - k - 1);
+	return t;
+
 	}
 }
 //求二叉树结点个数
@@ -189,12 +304,107 @@ BinTreeNode *BinTreeParent(BinTree t, BinTreeNode *p)
 		return NULL;
 	if (t->leftChild == p || t->rightChild == p)
 		return t;
-	BinTreeNode *p = BinTreeParent(t->leftChild, p);
-	if (p != NULL)
-		return p;
+	BinTreeNode *pt = BinTreeParent(t->leftChild, p);
+	if (pt != NULL)
+		return pt;
 	return BinTreeParent(t->rightChild, p);
 
 }
-BinTreeNode *BinTreeCopy(BinTree t);
-bool Equal(BinTree t1, BinTree t2);
+//克隆二叉树
+BinTreeNode *BinTreeClone(BinTree t)
+{
+	if (t == NULL)
+		return NULL;
+	else
+	{
+		BinTreeNode *bt = (BinTreeNode*)malloc(sizeof(BinTreeNode));
+		assert(bt != NULL);
+		bt->data = t->data;
+		bt->leftChild = BinTreeClone(t->leftChild);
+		bt->rightChild = BinTreeClone(t->rightChild);
+		return bt;
+	}
+}
+//判断两个二叉树是否相等
+bool Equal(BinTree t1, BinTree t2)
+{
+	if (t1 == NULL && t2 == NULL){
+		return true;
+	}
+	if ((t1 == NULL || t2 == NULL)){
+		return false;
+	}
+	return (t1->data == t2->data) && Equal(t1->leftChild, t2->leftChild) && Equal(t1->rightChild, t2->rightChild);
+}
+
+//先序
+void BinTreeVLR_Nor(BinTree t)
+{
+	if (t != NULL){
+		LinkStack st;
+		LinkStackInit(&st);
+		LinkStackPush(&st, t);
+		while (!LinkStackEmpty(&st))
+		{
+			BinTreeNode *p = LinkStackTop(&st);
+			LinkStackPop(&st);
+			printf("%c", p->data);
+			if (p->rightChild != NULL)
+				LinkStackPush(&st, p->rightChild);
+			if (p->leftChild != NULL)
+				LinkStackPush(&st, p->leftChild);
+		}
+		LinkStackDestroy(&st);
+	}
+}
+//中序
+void BinTreeLVR_Nor(BinTree t)
+{
+	if (t != NULL){
+		LinkStack st;
+		LinkStackInit(&st);
+
+		do
+		{
+			while (t != NULL){
+				LinkStackPush(&st, t);
+				t = t->leftChild;
+			}
+			BinTreeNode *p = LinkStackTop(&st);
+			LinkStackPop(&st);
+			printf("%c", p->data);		
+			if (p->rightChild != NULL)
+			{
+				t= p->rightChild;
+			}
+		}while (!LinkStackEmpty(&st) || t != NULL);
+	}
+}
+//后序
+void BinTreeLRV_Nor(BinTree t)
+{
+	if (t != NULL){
+		LinkStack st;
+		LinkStackInit(&st);
+		BinTreeNode *pre = NULL;
+		do{
+			if (t != NULL){
+				LinkStackPush(&st, t);
+				t = t->leftChild;
+			}
+			BinTreeNode *p = LinkStackTop(&st);
+			
+			if (p->rightChild == NULL||p->rightChild==pre)
+			{
+			 	LinkStackPop(&st);
+			    printf("%c", p->data);
+			    pre = p;
+			}else
+                t = p->rightChild;
+		} while (!LinkStackEmpty(st));
+}
+void BinTreelevel_Nor(BinTree t)
+{
+
+}
 #endif //_BINTREE_H_

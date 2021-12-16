@@ -3,28 +3,35 @@
 
 int main()
 {
-	const char *str = "ABC##DE##F##G#H##";
+	const char *vlr = "ABCDEFGH";
+	const char *lvr = "CBEDFAGH";
+	const char *lrv = "CEFDBHGA";
 	BinTree bt;
 	BinTreeInit(&bt);
-	//BinTreeCreate(&bt);
-	int index = 0;
-	BinTreeCreate_2(str, &index);//这里为什么要传地址，是为了在函数里改变，也会影响主函数
-	//先序
-	printf("VLR:");
-	BinTreeVLR(bt);
-	printf("\n");
-	//中序
-	printf("LVR:");
-	BinTreeLVR(bt);
-	printf("\n");
-	//后序
-	printf("LRV:");
-	BinTreeLRV(bt);
-	printf("\n");
-	Height(bt);
-	char key = 'D';
-	BinTreeNode *p = BinTreeFind(bt, key);
-	BinTreeNode *pr = BinTreeParent(bt, p);
+	bt=BinTreeCreate_3(vlr, lvr, strlen(vlr));
+	//const char *str = "ABC##DE##F##G#H##";
+	//BinTree bt;
+	//BinTreeInit(&bt);
+	////BinTreeCreate(&bt);
+	//int index = 0;
+	//bt=BinTreeCreate_2(str, &index);//这里为什么要传地址，是为了在函数里改变，也会影响主函数
+	//BinTree bt1 = BinTreeClone(bt);
+	////先序
+	//printf("VLR:");
+	//BinTreeVLR(bt);
+	//printf("\n");
+	////中序
+	//printf("LVR:");
+	//BinTreeLVR(bt);
+	//printf("\n");
+	////后序
+	//printf("LRV:");
+	//BinTreeLRV(bt);
+	//printf("\n");
+	//Height(bt);
+	//char key = 'D';
+	//BinTreeNode *p = BinTreeFind(bt, key);
+	//BinTreeNode *pr = BinTreeParent(bt, p);
 	system("pause");
 	return 0;
 }
