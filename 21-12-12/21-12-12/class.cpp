@@ -1,7 +1,7 @@
 
 #include "bintree.h"
 
-int main()
+void main()
 {
 	const char *vlr = "ABCDEFGH";
 	const char *lvr = "CBEDFAGH";
@@ -32,8 +32,6 @@ int main()
 	//char key = 'D';
 	//BinTreeNode *p = BinTreeFind(bt, key);
 	//BinTreeNode *pr = BinTreeParent(bt, p);
-	system("pause");
-	return 0;
 }
 
 //#include <iostream>

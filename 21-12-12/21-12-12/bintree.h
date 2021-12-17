@@ -116,6 +116,7 @@ void BinTreeCreate(BinTree *t);//因为可能要改变二叉树的根节点，所以传递地址
 BinTree BinTreeCreate_1();
 BinTree BinTreeCreate_2(const char *s,int *i);
 BinTree BinTreeCreate_3(const char *vlr, const char *lvr,int n);
+BinTree BinTreeCreate_4(const char *vlr, const char *lrv, int n);
 //二叉树的遍历
 void BinTreeVLR(BinTree t);
 void BinTreeLVR(BinTree t); 
@@ -197,6 +198,7 @@ BinTree BinTreeCreate_2(const char *s, int *i)
 		return t;
 	}
 }
+//创建3
 BinTree BinTreeCreate_3(const char *vlr, const char *lvr, int n)
 {
 	if (n == 0){
@@ -211,8 +213,19 @@ BinTree BinTreeCreate_3(const char *vlr, const char *lvr, int n)
 	t->leftChild = BinTreeCreate_3(vlr + 1, lvr, k);
 	t->rightChild = BinTreeCreate_3(vlr + k + 1, lvr + k + 1, n - k - 1);
 	return t;
-
-	}
+}
+//创建4
+BinTree BinTreeCreate_4(const char *vlr, const char *lrv, int n)
+{
+	if (n == 0)
+		return NULL;
+	int k = 0;
+	while (vlr[0] != lrv[k])
+		k++;
+	BinTreeNode *t = (BinTreeNode*)malloc(sizeof(BinTreeNode));
+	t->data = lrv[k];
+	t->leftChild = BinTreeCreate_4(vlr+1,);
+	t->rightChild = BinTreeCreate_4();
 }
 //求二叉树结点个数
 int Size(BinTree t)
