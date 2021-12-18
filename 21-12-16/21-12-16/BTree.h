@@ -85,9 +85,24 @@ int BinaryTreeLeafSize(BTNode* root)
 	return BinaryTreeLeafSize(root->left) + BinaryTreeLeafSize(root->right);
 }
 // 二叉树第k层节点个数
-int BinaryTreeLevelKSize(BTNode* root, int k);
+int BinaryTreeLevelKSize(BTNode* root, int k)
+{
+	if (root == NULL || k <= 0)
+		return 0;
+	if (root != NULL&&k == 1)
+		return 1;
+	return BinaryTreeLevelKSize(root->left, k - 1) + BinaryTreeLevelKSize(root->right, k - 1);
+}
 // 二叉树查找值为x的节点
-BTNode* BinaryTreeFind(BTNode* root, BTDataType x);
+BTNode* BinaryTreeFind(BTNode* root, BTDataType x)
+{
+	if (root == NULL || root->data == x)
+		return root;
+	BTNode *p = BinaryTreeFind(root->left, x);
+	if (p != NULL)
+		return p;
+	return BinaryTreeFind(root->right, x);
+}
 // 二叉树前序遍历 
 void BinaryTreePrevOrder(BTNode* root);
 // 二叉树中序遍历
