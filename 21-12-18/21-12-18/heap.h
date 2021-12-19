@@ -57,6 +57,13 @@ void HeapInsert(MinHeap *php, HeapElemType x)
 //删除
 void HeapDelete(MinHeap *php, HeapElemType key)
 {
+	if (php->size == 0){
+		printf("堆空间已空");
+		return;
+	}
+	php->base[0] = php->base[php->size];
+	HeapShiftDown(php, php->size);
+	php->size--;
 
 }
 //显示
@@ -85,6 +92,13 @@ void HeapShiftUp(MinHeap *php, int start)
 //向下调整
 void HeapShiftDown(MinHeap *php, int start)
 {
-
+	int i = start;
+	int j = (i * 2) + 1;
+		while (i <= php->size){
+			if (php->base[j] < php->base[i]){
+				Swap(&php->base[j], &php->base[i]);
+			else
+				break;
+		}
 }
 #endif//_HEAP_H_
