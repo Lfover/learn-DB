@@ -104,13 +104,108 @@ BTNode* BinaryTreeFind(BTNode* root, BTDataType x)
 	return BinaryTreeFind(root->right, x);
 }
 // 二叉树前序遍历 
-void BinaryTreePrevOrder(BTNode* root);
+void BinaryTreePrevOrder(BTNode* root)
+{
+	assert(root);
+	if (root != NULL){
+		printf("%c", root->data);
+		BinaryTreePrevOrder(root->left);
+		BinaryTreePrevOrder(root->right);
+	}
+}
 // 二叉树中序遍历
-void BinaryTreeInOrder(BTNode* root);
+void BinaryTreeInOrder(BTNode* root)
+{
+	assert(root);
+	if (root != NULL){
+		BinaryTreeInOrder(root->left);
+		printf("%c", root->data);
+		BinaryTreeInOrder(root->right);
+	}
+}
 // 二叉树后序遍历
-void BinaryTreePostOrder(BTNode* root);
+void BinaryTreePostOrder(BTNode* root)
+{
+	assert(root);
+	if (root != NULL){
+		BinaryTreeInOrder(root->left);
+		BinaryTreeInOrder(root->right);
+		printf("%c", root->data);
+}
 // 层序遍历
 void BinaryTreeLevelOrder(BTNode* root);
 // 判断二叉树是否是完全二叉树
 int BinaryTreeComplete(BTNode* root);
+
+
+
+BinTree BinTreeCreate_4(const char *lrv, const char *lvr, int n)
+{
+	if (n == 0)
+		return NULL;
+	int k = 0;
+	while (lrv[n-1] != lvr[k])
+		k++;
+	BinTreeNode *t = (BinTreeNode*)malloc(sizeof(BinTreeNode));
+	t->data = lvr[k];
+	t->leftChild = BinTreeCreate_4(lrv,lvr,k);
+	t->rightChild = BinTreeCreate_4(lrv+k,lvr+1+k,n-k-1);
+	return t;
+}
 #endif//二叉树
+
+
+int main()
+{
+	Node* head, *tail;
+	// 初始化无结点时
+	head = tail = nullptr;
+	// 加入一个结点
+	Node* node = new Node();
+	head = tail = node;
+	// 在加入一个结点
+	Node* node1 = new Node();
+	tail->next = node1;
+	tail = tail->next;	// tail = node1;
+	assert(p != null);
+	if (p == 0)
+	{
+		cout <<
+			return;
+	}*p, x;
+	// p = null(0) -》 应该去终止程序
+	// p == null -> true
+	// p -> false
+	// p != null -> false
+	assert(p != null);
+	asser(p);
+	if (p == NULL){	//判断空指针 
+
+	}
+}
+
+void initLinkList(Node *head)
+{
+
+}
+
+void insertNode(Node* head, int x)
+{
+	// 当链表为空的时候
+	if (head == nullptr)
+	{
+		head = new Node();
+		return;
+	}
+	// 链表有结点
+	// 1. 找到链表的尾部
+	Node* tmp = head;
+	while (tmp->next)
+	{
+		tmp = tmp->next;
+	}
+	// 2. 向链表尾部插入一个节点
+	Node* node = new Node(x);
+	tmp->next = node;
+	
+}
