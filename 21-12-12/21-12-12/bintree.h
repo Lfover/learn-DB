@@ -228,6 +228,11 @@ BinTree BinTreeCreate_4(const char *vlr, const char *lrv, int n)
 	t->rightChild = BinTreeCreate_4();
 }
 //求二叉树结点个数
+/*
+	深度遍历：DFS 递归 或 栈实现
+	广度遍历：BFS 递归 或 队列实现
+	层序遍历： 队列实现
+*/
 int Size(BinTree t)
 {
 	assert(t);
@@ -235,6 +240,10 @@ int Size(BinTree t)
 		return 0;
 	}
 	else{
+		// int le = Size(t->leftChild);
+		// int ri = Size(t->rightChild);
+		// return le + ri + 1;
+		// return t == NULL ? 0 : Size(t->leftChild) + Size(t->rightChild) + 1;
 		return Size(t->leftChild) + Size(t->rightChild) + 1;
 	}
 }
@@ -252,7 +261,7 @@ void BinTreeVLR(BinTree t)
 void BinTreeLVR(BinTree t)
 {
 	assert(t);
-	if (t != NULL){		
+	if (t != NULL){	
 		BinTreeLVR(t->leftChild);
         printf("%c", t->data);
 		BinTreeLVR(t->rightChild);
@@ -261,7 +270,6 @@ void BinTreeLVR(BinTree t)
 //后序遍历
 void BinTreeLRV(BinTree t)
 {
-	assert(t);
 	if (t != NULL){
 		BinTreeLRV(t->leftChild);
 		BinTreeLRV(t->rightChild);
@@ -300,20 +308,20 @@ BinTreeNode *Right(BinTreeNode *p)
 	assert(p);
 	return p->rightChild;
 }
-//查找
+//查找 
 BinTreeNode *BinTreeFind(BinTree t, BTElemType key)
 {
-	if (t == NULL||t->data == key)
+	if (t == NULL || t->data == key)
 		return t;
 	BinTreeNode *p = BinTreeFind(t->leftChild,key);
 	if (p != NULL)
 		return p;
-	return BinTreeFind(t->rightChild,key);
+	return BinTreeFind(t->rightChild, key);
 }
 //查找父节点
 BinTreeNode *BinTreeParent(BinTree t, BinTreeNode *p)
 {
-	if (t == NULL || p==NULL||t->data==p->data)
+	if (t == NULL || p==NULL || t->data==p->data)
 		return NULL;
 	if (t->leftChild == p || t->rightChild == p)
 		return t;
@@ -329,8 +337,8 @@ BinTreeNode *BinTreeClone(BinTree t)
 	if (t == NULL)
 		return NULL;
 	else
-	{
-		BinTreeNode *bt = (BinTreeNode*)malloc(sizeof(BinTreeNode));
+	{// sizeof(m)  sizeof m
+		BinTreeNode *bt = (BinTreeNode*)malloc(sizeof BinTreeNode);
 		assert(bt != NULL);
 		bt->data = t->data;
 		bt->leftChild = BinTreeClone(t->leftChild);
