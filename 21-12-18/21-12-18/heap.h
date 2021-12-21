@@ -20,12 +20,13 @@ typedef struct MinHeap
 }MinHeap;
 
 void HeapInit(MinHeap *php,int sz=HEAP_SIZE);
+void HeapCreate(MinHeap *php, HeapElemType arr[], int n);
 void HeapInsert(MinHeap *php, HeapElemType x);
 void HeapDelete(MinHeap *php);//删除只能删除堆顶
 
 void HeapShow(MinHeap *php);
 void HeapShiftUp(MinHeap *php, int start);
-void HeapShiftDown(MinHeap *php, int start);
+void HeapShiftDown(MinHeap *php, int start,int n);
 ////////////////////////////////////////////
 //交换
 void Swap(HeapElemType *t1, HeapElemType *t2){
@@ -43,6 +44,29 @@ void HeapInit(MinHeap *php,int sz)
 	memset(php->base, 0, sizeof(HeapElemType)*php->capacity);
 	php->size = 0;
 }
+//创建
+void HeapCreate(MinHeap *php, HeapElemType arr[], int n)
+{
+	//1.分配空间
+	php->capacity = n;
+	php->base = (HeapElemType*)malloc(sizeof(HeapElemType)*php->capacity);
+	//2.判断分配是否成功
+	if (php->base == NULL){
+		return;
+	}
+	//3.成功，堆空间先把字符串存下来
+	for (int i = 0; i<n; i++){
+		php->base[i]=arr[i];
+	}
+	php->size = n;
+	//4.堆调整
+	//找到最后一个分支是因为向下调整，最后一个分支会依次往回遍历，每个结点的大小都会碰到
+	int currentpos = n / 2 - 1;//找到最后一个分支
+	while (currentpos >= 0){
+		HeapShiftDown(php, currentpos, n);
+		currentpos--;
+	}
+}
 //插入
 void HeapInsert(MinHeap *php, HeapElemType x)
 {
@@ -55,25 +79,28 @@ void HeapInsert(MinHeap *php, HeapElemType x)
 	php->size++;
 }
 //删除
-void HeapDelete(MinHeap *php, HeapElemType key)
+void HeapDelete(MinHeap *php)
 {
+	if (php == NULL)
+		return;
 	if (php->size == 0){
 		printf("堆空间已空");
 		return;
 	}
-	php->base[0] = php->base[php->size];
-	HeapShiftDown(php, php->size);
 	php->size--;
-
+	php->base[0] = php->base[php->size];
+	HeapShiftDown(php, 0, php->size);
 }
 //显示
 void HeapShow(MinHeap *php)
 {
 	assert(php);
 	for (int i = 0; i < php->size; i++){
-		printf("%d", php->base[i]);
+		printf("%d ", php->base[i]);
 	}
+	printf("\n");
 }
+//能不能不用每次都交换
 //向上调整
 void HeapShiftUp(MinHeap *php, int start)
 {
@@ -90,15 +117,27 @@ void HeapShiftUp(MinHeap *php, int start)
 	}
 }
 //向下调整
-void HeapShiftDown(MinHeap *php, int start)
+void HeapShiftDown(MinHeap *php, int start,int n)
 {
 	int i = start;
 	int j = (i * 2) + 1;
-		while (i <= php->size){
-			if (php->base[j] < php->base[i]){
-				Swap(&php->base[j], &php->base[i]);
-			else
+	        //1.循环结束条件j>=n
+		while (j<n){
+			//2.如果右子树存在且比左子树小
+			if (j + 1 < n && php->base[j] > php->base[j + 1]){
+				j++;//j变到右子树上去
+			}
+			//3.如果父节点大于子结点，交换父子，改变i,j
+			if (php->base[i]>php->base[j])
+				{
+					Swap(&php->base[i], &php->base[j]);
+					i = j;
+					j = 2 * i + 1;
+				}
+			//4.如果父节点小于子结点，满足小根堆，跳出循环
+			else{
 				break;
+			}
 		}
 }
 #endif//_HEAP_H_

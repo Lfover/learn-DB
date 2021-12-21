@@ -10,5 +10,9 @@ void main()
 		HeapInsert(&mhp, arr[i]);
 	}
 	HeapShow(&mhp);
+	HeapInsert(&mhp, 17);
+	HeapShow(&mhp);
+	HeapDelete(&mhp);
+	HeapShow(&mhp);
 	system("pause");
 }
