@@ -129,26 +129,43 @@ bool BstDelete(BSTree *bst, BinTreeSearch *p)
 		//2.删除结点有左子树，没有右子树
 		//3.删除结点没有右子树，有左子树
 		//4.删除结点有左子树，有右子树
-		if (p->leftChild == NULL&&p->rightChild == NULL){
-			free(*bst);
-			*bst = NULL;
-		}
-		else if (p->leftChild != NULL&&p->rightChild == NULL){
-			*bst = p->leftChild;
-			free(p);
-		}
-		else if (p->leftChild == NULL&&p->rightChild != NULL){
-			*bst = p->rightChild;
-			free(p);
+	//法一
+		//if (p->leftChild == NULL&&p->rightChild == NULL){
+		//	free(*bst);
+		//	*bst = NULL;
+		//}
+		//else if (p->leftChild != NULL&&p->rightChild == NULL){
+		//	*bst = p->leftChild;
+		//	free(p);
+		//}
+		//else if (p->leftChild == NULL&&p->rightChild != NULL){
+		//	*bst = p->rightChild;
+		//	free(p);
+		//}
+		//else{
+		//	BinTreeSearch *s = p->leftChild;
+		//	while (p->rightChild != NULL)
+		//		s = s->rightChild;
+		//	p->data = s->data;
+		//	BstDelete(&(p->leftChild), s);
+		//}
+		//return true;
+
+
+   //法二
+		if (p->leftChild != NULL&&p->rightChild != NULL){
+			BinTreeSearch *s = p->leftChild;
+				while (p->rightChild != NULL)
+					s = s->rightChild;
+				p->data = s->data;
+				BstDelete(&(p->leftChild), s);
 		}
 		else{
-			BinTreeSearch *s = p->leftChild;
-			while (p->rightChild != NULL)
-				s = s->rightChild;
-			p->data = s->data;
-			BstDelete(&(p->leftChild), s);
+			if (p->leftChild != NULL)
+				*bst = p->leftChild;
+			else
+				*bst = p->rightChild;
 		}
-		return true;
 	}
 	return false;
 }
