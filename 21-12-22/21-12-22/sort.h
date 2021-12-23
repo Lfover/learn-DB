@@ -64,7 +64,7 @@ void BinTnsertSort(int *arr, int left, int right)
 {
 	for (int i = 1; i < right; i++){
 		int temp = arr[i];
-	int start = 0;
+	int start = left;
 	int end = i-1;
 	while (start <= end){
 		int mid = start + (end - start) / 2;
@@ -165,6 +165,164 @@ void ShellInsert(int *arr, int left, int right)
 			}
 		}
 	}
+}
+//直接插入排序
+void SelectSort(int *arr, int left, int right)
+{
+	for (int i = left; i < right; i++){
+		int min = arr[i];
+		int pos = i;
+		for (int j = i + 1; j < right; j++){
+			if (arr[i] < min){
+				min = arr[i];
+				pos = j;
+			}
+		}
+		if (pos != i){
+			Swap(&arr[i], &arr[pos]);
+		}
+	}
+}
+//堆排序
+void ShiftDown(int *arr, int left,int right, int curpos)
+{
+	int i = curpos;//i是父节点
+	int j = 2 * i + 1+left;//j是子结点
+	int n = right - left;
+	while (j<n){
+		if (j + 1 < n&&arr[j] < arr[j + 1])
+			j++;
+		if (arr[i] < arr[j]){
+			Swap(&arr[i], &arr[j]);
+			i = j;
+			j = 2 * i + 1;
+		}
+		else
+			break;
+	}
+}
+void ShiftDown_1(int *arr, int left, int right, int curpos)
+{
+	int i = curpos;//i是父节点
+	int j = 2 * i + 1 + left;//j是子结点
+	int n = right - left;
+	int temp = arr[i];
+	while (j<n){
+		if (j + 1 < n&&arr[j] < arr[j + 1])
+			j++;
+		if (temp < arr[j]){
+			arr[i]= arr[j];
+			i = j;
+			j = 2 * i + 1;
+		}
+		else
+			break;
+	}
+}
+void HeapSort(int *arr, int left, int right)
+{
+	//1.创建大堆
+	int n = right - left;
+		int cur = n / 2 - 1 + left;
+	while (cur >= 0){
+		ShiftDown(arr, left,right, cur);
+		cur--;
+	}
+	//2.排序
+	int end = right - 1;
+	while (end > left){
+		Swap(&arr[left], &arr[end]);
+		end--;
+		ShiftDown(arr, left, end, left);
+	}
+}
+//冒泡排序
+void BubbleSort(int *arr, int left, int right)
+{
+	int n = right - left;
+	for (int i = 0; i < n - 1; i++){
+		for (int j = 0; j < n-i-1; j++){
+			if (arr[j] < arr[j - 1]){
+				Swap(&arr[j], &arr[j + 1]);
+			}
+		}
+	}
+}
+//冒泡排序优化
+void BubbleSort_1(int *arr, int left, int right)
+{
+	int n = right - left;
+	bool q = false;
+	for (int i = 0; i < n - 1; i++){
+		for (int j = 0; j < n - i - 1; j++){
+			if (arr[j] < arr[j - 1]){
+				Swap(&arr[j], &arr[j + 1]);
+				q = true;
+			}
+		}
+		if (!q)
+			break;
+		else{
+			q = false;
+		}
+	}
+}
+//快速排序
+//hoare版本
+int _Partition_1(int *arr, int left, int right)
+{
+	int key = arr[left];
+	while (left < right){
+		while (left<right&&arr[right]>key)
+			right--;
+		Swap(&arr[left], &arr[right]);
+		while (left < right&&arr[left] < key)
+			left++;
+		Swap(&arr[left], &arr[right]);		
+	}
+	return left;
+}
+//挖坑法
+int _Partition_2(int *arr, int left, int right)
+{
+	int key = arr[left];
+	while (left < right)
+	{
+		while (left<right&&arr[right]>key)
+			right--;
+		arr[left] = arr[right];
+		while (left < right&&arr[left] < key)
+			left--;
+		arr[right] = arr[left];
+	}
+	arr[left] = key;
+	return left;
+}
+//前后指针法
+int _Partition_3(int *arr, int left, int right)
+{
+	int key = arr[left];
+	int pos = left;
+	for (int i = left + 1; i <= right; i++){
+		if (arr[i] < key)
+		{
+			pos++;
+			//pos和i的位置不同，代表有比key大的值，找到了交换目前的I和pos
+			if (pos != i)
+				Swap(&arr[pos], &arr[i]);
+		}
+	}
+	Swap(&arr[left], &arr[pos]);
+	return pos;
+
+}
+void QuickSort(int *arr, int left, int right)
+{
+	if (left >= right - 1)
+		return;
+	int pos = _Partition_1(arr, left, right - 1);//分割数组
+	QuickSort(arr, left, pos - 1);
+	QuickSort(arr, pos + 1, right);
 }
 //测试插入排序
 void TestSort(int *arr, int left, int right)
