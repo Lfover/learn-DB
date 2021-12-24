@@ -268,9 +268,22 @@ void BubbleSort_1(int *arr, int left, int right)
 	}
 }
 //快速排序
+int GetIndexMidVal(int *arr, int left, int right)
+{
+	int mid = (left + right) / 2;
+	if (arr[left] > arr[mid] && arr[left] < arr[right])
+		return left;
+	if (arr[mid]>arr[left] && arr[mid] < arr[right])
+		return mid;
+	return right;
+}
 //hoare版本
 int _Partition_1(int *arr, int left, int right)
 {
+	//三者中取中间值
+	int index = GetIndexMidVal(arr, left, right);
+	if (index != left)
+		Swap(&arr[index], &arr[left]);
 	int key = arr[left];
 	while (left < right){
 		while (left<right&&arr[right]>key)
@@ -285,6 +298,10 @@ int _Partition_1(int *arr, int left, int right)
 //挖坑法
 int _Partition_2(int *arr, int left, int right)
 {
+	//三者中取中间值
+	int index = GetIndexMidVal(arr, left, right);
+	if (index != left)
+		Swap(&arr[index], &arr[left]);
 	int key = arr[left];
 	while (left < right)
 	{
@@ -301,6 +318,10 @@ int _Partition_2(int *arr, int left, int right)
 //前后指针法
 int _Partition_3(int *arr, int left, int right)
 {
+	//三者取中
+	int index = GetIndexMidVal(arr, left, right);
+	if (index != left)
+		Swap(&arr[index], &arr[left]);
 	int key = arr[left];
 	int pos = left;
 	for (int i = left + 1; i <= right; i++){
@@ -316,13 +337,111 @@ int _Partition_3(int *arr, int left, int right)
 	return pos;
 
 }
+//哪个快拿哪个
+//如果数量小于M，用直接插入排序，如果大于M，用快速排序
+#define M 25
 void QuickSort(int *arr, int left, int right)
 {
 	if (left >= right - 1)
 		return;
-	int pos = _Partition_1(arr, left, right - 1);//分割数组
-	QuickSort(arr, left, pos - 1);
-	QuickSort(arr, pos + 1, right);
+	if (right - left <= M)
+		InsertSort_2(arr, left, right);
+	else
+	{
+		int pos = _Partition_1(arr, left, right - 1);//分割数组
+		QuickSort(arr, left, pos - 1);
+		QuickSort(arr, pos + 1, right);
+	}
+}
+//归并过程
+void _MergeSort(int *arr, int left, int right, int *temp)
+{
+	//1.先分解
+	if (left >= right)
+		return;
+	int mid = (left + right) / 2;
+	_MergeSort(arr, left, mid, temp);
+	_MergeSort(arr, mid + 1, right, temp);
+	//2.后归并
+	int begin1, end1, begin2, end2, i;
+	begin1 = left; end1 = mid;
+	begin2 = mid + 1; end2 = right;
+	
+	i = 0;
+	while (begin1 <= end1&&begin2 <= end2){
+		if (arr[begin1] < arr[begin2])
+			temp[i++] = arr[begin1++];
+		else
+			temp[i++] = arr[begin2++];
+	}
+	while (begin1 < end1)
+		temp[i++] = arr[begin1++];
+	while (begin2 < end2)
+		temp[i++] = arr[begin2++];
+
+	memcpy(arr + left, temp, sizeof(int)*(right - left + 1));
+}
+//归并排序
+void MergeSort(int *arr, int left, int right)
+{
+	int n = right - left;
+	int *temp = (int *)malloc(sizeof(int)*n);
+	assert(temp!=NULL);
+
+	//归并排序过程
+	_MergeSort(arr, left, right, temp);
+
+	free(temp);
+	temp = NULL;
+}
+#define RADIX 10
+#define K 10
+//取几位数上的每个数
+int GetKey(int value, int k)
+{
+	int key;
+	while (k >= 0)
+	{
+		key = value % 10;
+		value / 10;
+		k--;
+	}
+	return key;
+}
+//分发
+void Distribute(int *arr, int left, int right, int k)
+{
+	for (int i = left; i < right; i++)
+	{
+		int key = GetKey(arr[i], k);
+		SListPushBack(&list[key], arr[i]);//将数组arr[i]的值放到链表中，尾插
+	}
+}
+//合并
+void Collect(int *arr)
+{
+	int k = 0; 
+	for (int i = 0; i < RADIX; i++){
+		while (!SListEmpty(&list[i]))
+		{
+			//只要链表在此位置上不为空，就回收数据
+			arr[k++] = SListFront(list[i]);
+			SListPopFront(&list[i]);
+		}
+	
+	}
+}
+//基数排序
+void RadixSort(int *arr, int left, int right)
+{
+	for (int i = 0; i < RADIX; i++)
+		SlListInit(&list[i]);//初始化链表
+	for (int i = 0; i < k; i++){
+		//1.分发
+		Distribute(arr, left, right - 1, i);
+		//2.收集
+		Collect(arr);
+	}
 }
 //测试插入排序
 void TestSort(int *arr, int left, int right)
