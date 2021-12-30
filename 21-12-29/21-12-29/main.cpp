@@ -10,7 +10,19 @@ int main()
 	LlistAdd(&ll, 4);
 	LlistAdd(&ll, 5);
 	Show(ll);
-	LlistFind(&ll, 8);
+	LlistFind(&ll, 5);
+	LlistDel(&ll, 1);
+	Show(ll);
+	LlistDel(&ll, 2);
+	Show(ll);
+	LlistDel(&ll, 3);
+	Show(ll);
+	LlistDel(&ll, 4);
+	Show(ll);
+	LlistDel(&ll, 5);
+	Show(ll);
+	LlistChange(&ll, 5, 8);
+	Show(ll);
 
 	system("pause");
 	return 0;

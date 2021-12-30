@@ -64,28 +64,52 @@ void LlistDel(Llist *list, ElemType x)
 		return;
 	}
 	linklist* p = *list;
-	//如果就一个结点且为目标值
-	if (p->next == NULL && p->data == x)
+	//如果第一个结点为目标值
+	if (p->data == x)
 	{
-		list == NULL;
+		*list = p->next;
 		return;
 	}
-	
-	//如果要删除的目标值不存在
-	
-
+	//要删除结点的前驱
+	linklist *prev = *list;
+	p = p->next;
+	while (p != NULL)
+	{
+		if (p->data == x)
+		{
+			prev->next = p->next;
+			free(p);
+			printf("删除成功\n");
+			return;
+		}
+		prev = p;
+		p = p->next;
+	}
+	printf("要删除的值不存在\n");
 }
 //改
 void LlistChange(Llist *list, ElemType x, ElemType y)
 {
-
+	assert(list);
+	linklist *p = *list;
+	while (p != NULL)
+	{
+		if (p->data == x)
+		{
+			p->data = y;
+			printf("修改成功\n");
+			return;
+		}
+		p = p->next;
+	}
+	printf("没有该值可以修改\n");
 }
 //查
 linklist *LlistFind(Llist *list, ElemType x)
 {
 	assert(list);
 	linklist *p = *list;
-	while (p->next != NULL)
+	while (p != NULL)
 	{
 		if (p->data == x)
 		{
@@ -94,7 +118,7 @@ linklist *LlistFind(Llist *list, ElemType x)
 		}
 		p = p->next;
 	}
-	if (p == NULL || p->next == NULL)
+	if (p == NULL)
 	{
 		printf("没找到\n");
 		return NULL;
@@ -103,9 +127,9 @@ linklist *LlistFind(Llist *list, ElemType x)
 //显示
 void Show(Llist list)
 {
-	assert(list!=NULL);
+	assert(list != NULL);
 	linklist *head = list;
-	while (head->next != NULL)
+	while (head != NULL)
 	{
 		printf("%d ", head->data);
 		head = head->next;
